@@ -6,12 +6,22 @@ part of 'hangouts.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+ParticipantId _$ParticipantIdFromJson(Map<String, dynamic> json) {
+  return ParticipantId(json['gaia_id'] as String);
+}
+
+Map<String, dynamic> _$ParticipantIdToJson(ParticipantId instance) =>
+    <String, dynamic>{'gaia_id': instance.gaia_id};
+
 Participant _$ParticipantFromJson(Map<String, dynamic> json) {
-  return Participant(json['fallback_name'] as String);
+  return Participant(json['fallback_name'] as String)
+    ..id = json['id'] == null
+        ? null
+        : ParticipantId.fromJson(json['id'] as Map<String, dynamic>);
 }
 
 Map<String, dynamic> _$ParticipantToJson(Participant instance) =>
-    <String, dynamic>{'fallback_name': instance.name};
+    <String, dynamic>{'fallback_name': instance.name, 'id': instance.id};
 
 ConversationMetaData _$ConversationMetaDataFromJson(Map<String, dynamic> json) {
   return ConversationMetaData((json['participant_data'] as List)
@@ -32,11 +42,16 @@ Map<String, dynamic> _$ConversationWithIdToJson(ConversationWithId instance) =>
     <String, dynamic>{'conversation': instance.metadata};
 
 Event _$EventFromJson(Map<String, dynamic> json) {
-  return Event(Event._dateTimeFromEpochUs(json['timestamp'] as String));
+  return Event(Event._dateTimeFromEpochUs(json['timestamp'] as String))
+    ..senderId = json['sender_id'] == null
+        ? null
+        : ParticipantId.fromJson(json['sender_id'] as Map<String, dynamic>);
 }
 
-Map<String, dynamic> _$EventToJson(Event instance) =>
-    <String, dynamic>{'timestamp': Event._dateTimeToEpochUs(instance.datetime)};
+Map<String, dynamic> _$EventToJson(Event instance) => <String, dynamic>{
+      'timestamp': Event._dateTimeToEpochUs(instance.datetime),
+      'sender_id': instance.senderId
+    };
 
 Conversation _$ConversationFromJson(Map<String, dynamic> json) {
   return Conversation(

@@ -3,11 +3,25 @@ import 'package:json_annotation/json_annotation.dart';
 part 'hangouts.g.dart';
 
 @JsonSerializable()
+class ParticipantId {
+  ParticipantId(this.gaia_id);
+
+  String gaia_id;
+
+  factory ParticipantId.fromJson(Map<String, dynamic> json) =>
+      _$ParticipantIdFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ParticipantIdToJson(this);
+}
+
+@JsonSerializable()
 class Participant {
   Participant(this.name);
 
   @JsonKey(name: 'fallback_name')
   String name;
+
+  ParticipantId id;
 
   factory Participant.fromJson(Map<String, dynamic> json) =>
       _$ParticipantFromJson(json);
@@ -51,6 +65,9 @@ class Event {
       toJson: _dateTimeToEpochUs,
       nullable: false)
   DateTime datetime;
+
+  @JsonKey(name: 'sender_id')
+  ParticipantId senderId;
 
   static DateTime _dateTimeFromEpochUs(String us) =>
       DateTime.fromMicrosecondsSinceEpoch(int.parse(us));
